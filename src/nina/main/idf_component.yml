@@ -1,0 +1,12 @@
+targets:
+  - esp32
+
+dependencies:
+  ## Required IDF version
+  idf: ">=4.4.8"
+
+  ## IDF Components
+  espressif/mdns: 
+    matches:
+      - if: "idf_version >= 5.0"
+        version: "~1.4"

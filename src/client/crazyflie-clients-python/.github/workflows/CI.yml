@@ -1,0 +1,80 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout, fetch-depth=0 fetches the full repos (required for automatic versioning to work)
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Check build and install
+        run: |
+          pip install setuptools
+          python3 setup.py sdist
+          pip install dist/*.tar.gz
+
+      - run: docker pull bitcraze/builder
+
+      - name: CI checks
+        run: docker run --rm -v ${PWD}:/module bitcraze/builder ./tools/build/build
+  
+  Windows:
+    name: Windows
+    needs: checks
+
+    runs-on: windows-2019
+
+    steps:
+      # Checkout, fetch-depth=0 fetches the full repos (required for automatic versioning to work)
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+          architecture: 'x86'
+
+      - name: Install dependencies
+        run: |
+          pip install -e .[dev,qt5]
+      
+      - name: Install nsis
+        run: choco install -y nsis.portable -version 2.50
+
+      - name: Build exe
+        run: python setup.py install_exe -d windows_build
+      
+      - name: Test exe
+        run: windows_build\cfclient.exe --check-imports
+      
+      - name: Build installer
+        run: |
+          python win32install\generate_nsis.py
+          makensis win32install\cfclient.nsi
+      
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v2.1.4
+        with:
+          name: windows-build
+          path: "win32install/*.exe"
+

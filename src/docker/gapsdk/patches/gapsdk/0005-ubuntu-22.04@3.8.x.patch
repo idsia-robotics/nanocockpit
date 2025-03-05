@@ -1,0 +1,257 @@
+diff --git a/gvsoc/gvsoc/engine/include/vp/trace/trace.hpp b/gvsoc/gvsoc/engine/include/vp/trace/trace.hpp
+index 120069c3..46f258ad 100644
+--- a/gvsoc/gvsoc/engine/include/vp/trace/trace.hpp
++++ b/gvsoc/gvsoc/engine/include/vp/trace/trace.hpp
+@@ -1,21 +1,21 @@
+ /*
+- * Copyright (C) 2020  GreenWaves Technologies, SAS
++ * Copyright (C) 2020 GreenWaves Technologies, SAS, ETH Zurich and
++ *                    University of Bologna
+  *
+- * This program is free software: you can redistribute it and/or modify
+- * it under the terms of the GNU Affero General Public License as
+- * published by the Free Software Foundation, either version 3 of the
+- * License, or (at your option) any later version.
+- * 
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU Affero General Public License for more details.
+- * 
+- * You should have received a copy of the GNU Affero General Public License
+- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
+  */
+ 
+-/* 
++/*
+  * Authors: Germain Haugou, GreenWaves Technologies (germain.haugou@greenwaves-technologies.com)
+  */
+ 
+@@ -110,18 +110,25 @@ namespace vp {
+     int64_t pending_timestamp;
+     string full_path;
+     vector<std::function<void()>> callbacks;
+-  };    
+-
+-
+-#define vp_assert_always(cond, trace_ptr, msg...)  \
+-  if (!(cond)) {                                   \
+-    if (trace_ptr)                                 \
+-      ((vp::trace *)(trace_ptr))->fatal(msg);      \
+-    else                                           \
+-    {                                              \
+-      fprintf(stdout, "ASSERT FAILED: %s", msg);   \
+-      abort();                                     \
+-    }                                              \
++  };
++
++
++// the static_cast<vp_trace&> is here to fix a weird issue with the -Wnonnull
++// warning on GCC11. GCC says that trace_ptr is null, but we verified in the if
++// condition that it is not null.
++// The static_cast is used to avoid disabling the warning completely.
++#define vp_assert_always(cond, trace_ptr, msg...)     \
++  if (!(cond)) {                                      \
++    if (trace_ptr)                                    \
++    {                                                 \
++      vp::trace* trace_p = trace_ptr;                 \
++      (static_cast<vp::trace&>(*trace_p)).fatal(msg); \
++    }                                                 \
++    else                                              \
++    {                                                 \
++      fprintf(stdout, "ASSERT FAILED: %s", msg);      \
++      abort();                                        \
++    }                                                 \
+   }
+ 
+ #define vp_warning_always(trace_ptr, msg...)       \
+diff --git a/gvsoc/gvsoc/models/utils/dpi_wrapper_impl.cpp b/gvsoc/gvsoc/models/utils/dpi_wrapper_impl.cpp
+index 0cf25292..7e283958 100644
+--- a/gvsoc/gvsoc/models/utils/dpi_wrapper_impl.cpp
++++ b/gvsoc/gvsoc/models/utils/dpi_wrapper_impl.cpp
+@@ -312,7 +312,7 @@ void dpi_wrapper::raise_event()
+ void dpi_wrapper::raise_event_from_ext()
+ {
+   while(this->get_clock() == NULL)
+-    pthread_yield();
++    sched_yield();
+ 
+   this->get_clock()->get_engine()->lock();
+   if (!this->wakeup_evt->is_enqueued())
+diff --git a/tools/gap8-openocd/src/flash/nor/jtagspi.c b/tools/gap8-openocd/src/flash/nor/jtagspi.c
+index a9f2dd4a..fbcaa5d4 100644
+--- a/tools/gap8-openocd/src/flash/nor/jtagspi.c
++++ b/tools/gap8-openocd/src/flash/nor/jtagspi.c
+@@ -228,13 +228,16 @@ static int jtagspi_probe(struct flash_bank *bank)
+ 	return ERROR_OK;
+ }
+ 
+-static void jtagspi_read_status(struct flash_bank *bank, uint32_t *status)
++static int jtagspi_read_status(struct flash_bank *bank, uint32_t *status)
+ {
+ 	uint8_t buf;
+-	if (jtagspi_cmd(bank, SPIFLASH_READ_STATUS, NULL, &buf, -8) == ERROR_OK) {
++	int err = jtagspi_cmd(bank, SPIFLASH_READ_STATUS, NULL, &buf, -8);
++	if (err == ERROR_OK) {
+ 		*status = buf;
+ 		/* LOG_DEBUG("status=0x%08" PRIx32, *status); */
+ 	}
++
++	return err;
+ }
+ 
+ static int jtagspi_wait(struct flash_bank *bank, int timeout_ms)
+@@ -245,7 +248,11 @@ static int jtagspi_wait(struct flash_bank *bank, int timeout_ms)
+ 
+ 	do {
+ 		dt = timeval_ms() - t0;
+-		jtagspi_read_status(bank, &status);
++
++		int retval = jtagspi_read_status(bank, &status);
++		if (retval != ERROR_OK)
++			return retval;
++
+ 		if ((status & SPIFLASH_BSY_BIT) == 0) {
+ 			LOG_DEBUG("waited %" PRId64 " ms", dt);
+ 			return ERROR_OK;
+@@ -262,7 +269,11 @@ static int jtagspi_write_enable(struct flash_bank *bank)
+ 	uint32_t status;
+ 
+ 	jtagspi_cmd(bank, SPIFLASH_WRITE_ENABLE, NULL, NULL, 0);
+-	jtagspi_read_status(bank, &status);
++
++	int retval = jtagspi_read_status(bank, &status);
++	if (retval != ERROR_OK)
++		return retval;
++
+ 	if ((status & SPIFLASH_WE_BIT) == 0) {
+ 		LOG_ERROR("Cannot enable write to flash. Status=0x%08" PRIx32, status);
+ 		return ERROR_FAIL;
+diff --git a/tools/gap8-openocd/src/flash/nor/numicro.c b/tools/gap8-openocd/src/flash/nor/numicro.c
+index c62af04b..23f7d358 100644
+--- a/tools/gap8-openocd/src/flash/nor/numicro.c
++++ b/tools/gap8-openocd/src/flash/nor/numicro.c
+@@ -1243,7 +1243,7 @@ static uint32_t numicro_fmc_cmd(struct target *target, uint32_t cmd, uint32_t ad
+ 		retval = target_read_u32(target, NUMICRO_FLASH_ISPTRG, &status);
+ 		if (retval != ERROR_OK)
+ 			return retval;
+-			LOG_DEBUG("status: 0x%" PRIx32 "", status);
++		LOG_DEBUG("status: 0x%" PRIx32 "", status);
+ 		if ((status & (ISPTRG_ISPGO)) == 0)
+ 			break;
+ 		if (timeout-- <= 0) {
+@@ -1511,7 +1511,7 @@ static int numicro_erase(struct flash_bank *bank, int first, int last)
+ 			retval = target_read_u32(target, NUMICRO_FLASH_ISPTRG, &status);
+ 			if (retval != ERROR_OK)
+ 				return retval;
+-				LOG_DEBUG("status: 0x%" PRIx32 "", status);
++			LOG_DEBUG("status: 0x%" PRIx32 "", status);
+ 			if (status == 0)
+ 				break;
+ 			if (timeout-- <= 0) {
+@@ -1616,7 +1616,7 @@ static int numicro_write(struct flash_bank *bank, const uint8_t *buffer,
+ 				retval = target_read_u32(target, NUMICRO_FLASH_ISPTRG, &status);
+ 				if (retval != ERROR_OK)
+ 					return retval;
+-					LOG_DEBUG("status: 0x%" PRIx32 "", status);
++				LOG_DEBUG("status: 0x%" PRIx32 "", status);
+ 				if (status == 0)
+ 					break;
+ 				if (timeout-- <= 0) {
+diff --git a/tools/gap8-openocd/src/target/arm920t.c b/tools/gap8-openocd/src/target/arm920t.c
+index 2ecf218f..aad1b201 100644
+--- a/tools/gap8-openocd/src/target/arm920t.c
++++ b/tools/gap8-openocd/src/target/arm920t.c
+@@ -245,8 +245,8 @@ static int arm920t_read_cp15_interpreted(struct target *target,
+ 	uint32_t cp15_opcode, uint32_t address, uint32_t *value)
+ {
+ 	struct arm *arm = target_to_arm(target);
+-	uint32_t *regs_p[1];
+-	uint32_t regs[2];
++	uint32_t *regs_p[16];
++	uint32_t regs[16];
+ 	uint32_t cp15c15 = 0x0;
+ 	struct reg *r = arm->core_cache->reg_list;
+ 
+@@ -295,7 +295,7 @@ int arm920t_write_cp15_interpreted(struct target *target,
+ {
+ 	uint32_t cp15c15 = 0x0;
+ 	struct arm *arm = target_to_arm(target);
+-	uint32_t regs[2];
++	uint32_t regs[16];
+ 	struct reg *r = arm->core_cache->reg_list;
+ 
+ 	/* load value, address into R0, R1 */
+diff --git a/tools/gap8-openocd/src/target/riscv/riscv-011.c b/tools/gap8-openocd/src/target/riscv/riscv-011.c
+index dc09c968..1e10be9c 100644
+--- a/tools/gap8-openocd/src/target/riscv/riscv-011.c
++++ b/tools/gap8-openocd/src/target/riscv/riscv-011.c
+@@ -421,7 +421,7 @@ static dbus_status_t dbus_scan(struct target *target, uint16_t *address_in,
+ {
+ 	riscv011_info_t *info = get_info(target);
+ 	uint8_t in[8] = {0};
+-	uint8_t out[8];
++	uint8_t out[8] = {0};
+ 	struct scan_field field = {
+ 		.num_bits = info->addrbits + DBUS_OP_SIZE + DBUS_DATA_SIZE,
+ 		.out_value = out,
+diff --git a/tools/gap_tools/Makefile b/tools/gap_tools/Makefile
+index ecc57b96..6d1d7d2f 100644
+--- a/tools/gap_tools/Makefile
++++ b/tools/gap_tools/Makefile
+@@ -10,15 +10,15 @@ SRC = \
+ SDL_CFLAGS = $(shell sdl2-config --cflags)
+ SDL_LDFLAGS = $(shell sdl2-config --libs)
+ 
+-CV_CFLAGS = $(shell pkg-config opencv --cflags)
+-CV_LDFLAGS = $(shell pkg-config opencv --libs)
++CV_CFLAGS = $(shell pkg-config opencv4 --cflags)
++CV_LDFLAGS = $(shell pkg-config opencv4 --libs)
+ 
+ ifneq '$(SDL_CFLAGS)$(SDL_LDFLAGS)' ''
+ USE_SDL=1
+ SDL_CFLAGS += -D__USE_SDL__
+ endif
+ 
+-ifneq '$(SDL_CFLAGS)$(SDL_LDFLAGS)' ''
++ifneq '$(CV_CFLAGS)$(CV_LDFLAGS)' ''
+ USE_CV=1
+ CV_CFLAGS += -D__USE_OPENCV__
+ endif
+diff --git a/tools/gap_tools/python/pmsis_tools_frame_streamer.cpp b/tools/gap_tools/python/pmsis_tools_frame_streamer.cpp
+index 595c5873..2621350c 100644
+--- a/tools/gap_tools/python/pmsis_tools_frame_streamer.cpp
++++ b/tools/gap_tools/python/pmsis_tools_frame_streamer.cpp
+@@ -261,7 +261,7 @@ void Frame_stream::handle_req(Transport_req_t *req)
+ 
+       std::vector<uint8_t> jpeg_image(&jpeg_buffer[0], &jpeg_buffer[jpeg_buffer_size]);
+       InputArray input_array(jpeg_image);
+-      Mat image = imdecode(input_array, CV_LOAD_IMAGE_GRAYSCALE);
++      Mat image = imdecode(input_array, IMREAD_GRAYSCALE);
+ 
+       memcpy(buffer, image.data, this->width*this->height);
+       delete jpeg_buffer;
+diff --git a/tools/gapy/partition/__init__.py b/tools/gapy/partition/__init__.py
+index 887510ba..8dc17f6d 100644
+--- a/tools/gapy/partition/__init__.py
++++ b/tools/gapy/partition/__init__.py
+@@ -88,7 +88,7 @@ class ValidationError(InputError):
+ 
+ class PartitionNameFilenamePairAction(argparse.Action):
+ 	def __init__(self, option_strings, dest, nargs = 2, default = {}, **kwargs):
+-		if nargs is not 2:
++		if nargs != 2:
+ 			raise ValueError("nargs not allowed")
+ 		super(PartitionNameFilenamePairAction, self).__init__(
+ 			option_strings = option_strings,

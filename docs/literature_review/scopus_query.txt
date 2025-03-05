@@ -1,0 +1,35 @@
+TITLE-ABS-KEY(
+  (
+    (nano-uav OR nano-drone OR 
+        nanocopter OR nano-quadrotor) OR 
+    (palm-size AND uav) OR 
+    (palm-size AND drone) OR 
+    (pocket-size AND drone) OR 
+    (mini-drone) OR 
+    (mini-uav) OR 
+    (pocket-sized AND uav) OR 
+    (palm-sized AND uav) OR 
+    (pocket-sized AND drone) OR 
+    (palm-sized AND drone) OR 
+    (mini-uav)
+  ) OR (  
+    (Crazyflie) OR 
+    (Tello AND (drone OR uav OR quadrotor)) OR 
+    (ladybug OR (syma AND (ladybug OR x27)) AND 
+        (drone OR uav OR quadrotor)) OR 
+    (Mambo AND (drone OR uav OR quadrotor)) OR 
+    ("Rolling Spider" AND 
+        (drone OR uav OR quadrotor)) OR 
+    (CrazePony2 AND (drone OR uav OR quadrotor)) OR 
+    (ArduBee AND (drone OR uav OR quadrotor)) OR 
+    (ESPcopter) OR 
+    ("CX-10W" AND (drone OR uav OR quadrotor)) OR 
+    (PlutoX AND (drone OR uav OR quadrotor)) OR 
+    ("Arcade Pico" AND 
+        (drone OR uav OR quadrotor)) OR 
+    (RadioShack AND (drone OR uav OR quadrotor))
+  )
+) AND 
+PUBYEAR > 2019 AND PUBYEAR < 2025 
+AND 
+NOT DOCTYPE(cr) AND NOT DOCTYPE(er)

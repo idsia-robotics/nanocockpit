@@ -1,0 +1,10 @@
+<launch>
+  <!-- <arg name="pipe" default=""/> -->
+  <arg name="host" default="aideck.local"/>
+
+  <node pkg="aideck_cpx_streamer" exec="ros_viewer" name="ros_viewer" output="screen" namespace="cf">
+    <!--<param name="pipe" value="$(var pipe)"/>-->
+    <param name="host" value="$(var host)"/>
+    <param name="save_dir" value="$(find-pkg-prefix aideck_cpx_streamer)/data"/>
+  </node>
+</launch>

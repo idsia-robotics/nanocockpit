@@ -1,0 +1,35 @@
+syntax: glob
+*.pyc
+*~
+config.json
+dist/*
+build/*
+cache
+src/cfclient.egg-info/*
+src/cfclient/third_party/*
+version.json
+win32install/*.exe
+win32install/cfclient.nsi
+*.snap
+
+# PC client settings
+conf/*
+
+# Eclipse settings
+.project
+.pydevproject
+.settings/*
+msvcp90.dll
+
+# PyCharm
+.idea/*
+.DS_Store
+
+# vscode
+.vscode/
+
+# Jykell files
+docs/.jekyll-metadata
+
+# Python venv
+venv/

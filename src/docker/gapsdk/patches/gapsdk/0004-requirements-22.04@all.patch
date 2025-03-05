@@ -1,0 +1,10 @@
+diff --git a/requirements.txt b/requirements.txt
+index 39374240..4a41b021 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,4 +1,4 @@
+-pyelftools==0.24
++pyelftools~=0.26
+ prettytable==0.7.2
+ configparser
+ argcomplete

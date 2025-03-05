@@ -1,0 +1,56 @@
+build_info.json
+
+^bin/dep/all
+bin/*
+.cproject
+.project
+.pydevproject
+.settings/*
+.vscode/*
+*~
+tools/make/config.mk
+cflie.*
+version.c
+tags
+
+/cf2.*
+/tag.*
+*.gch
+
+current_platform.mk
+
+/generated/**
+**/__pycache__/**
+
+/docs/.jekyll-metadata
+docs/.jekyll-cache
+docs/api
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk

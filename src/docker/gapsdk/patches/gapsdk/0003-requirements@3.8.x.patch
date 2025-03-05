@@ -1,0 +1,9 @@
+diff --git a/requirements.txt b/requirements.txt
+index 5b5baa85..39374240 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -3,3 +3,4 @@ prettytable==0.7.2
+ configparser
+ argcomplete
+ requests
++six

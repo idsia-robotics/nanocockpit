@@ -1,0 +1,31 @@
+/*
+ * soc.h
+ * Elia Cereda <elia.cereda@idsia.ch>
+ *
+ * Copyright (C) 2025 IDSIA, USI-SUPSI
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef __SOC_H__
+#define __SOC_H__
+
+#include <esp_cpu.h>
+
+#define SOC_NUM_CORES (SOC_CPU_CORES_NUM)
+
+static __attribute__((always_inline)) inline int soc_core_id() {
+    return xPortGetCoreID();
+}
+
+#endif // __SOC_H__
