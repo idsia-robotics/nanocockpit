@@ -15,6 +15,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * This software is based on the following publication:
+ *    E. Cereda, A. Giusti, D. Palossi. "NanoCockpit: Performance-optimized 
+ *    Application Framework for AI-based Autonomous Nanorobotics"
+ * We kindly ask for a citation if you use in academic work.
  */
 
 #include "trace.h"
