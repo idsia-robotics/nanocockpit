@@ -6,28 +6,6 @@ Performance-optimized Application Framework for AI-based Autonomous Nanorobotics
 * State-estimation forwarding to GAP8
 * Camera and state-estimation streaming over Wi-Fi
 
-## Literature review
-In our paper, we review the body of work on nanorobotics over the last five years and demonstrate both the high research interest in the topic and the Crazyflie's prominent status as de-facto standard robot platform.
-The data to reproduce our analysis is available in `docs/literature_review` as a resource to other researchers that approach the nano-drone field.
-We search the Elsevier Scopus citation database using the query in [scopus_query.txt](docs/literature_review/scopus_query.txt), resulting in the 554 papers reported in [scopus_dataset.csv](docs/literature_review/scopus_dataset.csv), with our manual annotations with information about the target drone platform.
-
-<!-- ## Publications
-If you use this work in an academic context, we kindly ask you to cite the following publication:
-* E. Cereda, D. Palossi, and A. Giusti, ‘NanoCockpit: Performance-optimized Application Framework for AI-based Autonomous Nanorobotics’, arXiv pre-print ####.#####, 2025 [arXiv](https://arxiv.org/abs/####.#####).
-  
-```bibtex
-@inproceedings{cereda2025nanocockpit,
-  author={Cereda, Elia and Giusti, Alessandro and Palossi, Daniele},
-  booktitle={}, 
-  title={NanoCockpit: Performance-optimized Application Framework for AI-based Autonomous Nanorobotics}, 
-  year={2025},
-  volume={},
-  number={},
-  pages={},
-  note={[Submitted]}
-}
-``` -->
-
 ## Structure
 This repository is structured with one sub-directory for each component of the system, matched with the hardware components in a Crazyflie drone:
 * `stm32`: code for the Crazyflie's main STM32 MCU, further divided in `crazyflie-firmware` (original Crazyflie firmware, with minor additions) and `app` (user application code).
@@ -97,6 +75,28 @@ $ esp 4.4.5
 ```shell
 $ source venv/bin/activate
 $ cfclient
+```
+
+## Literature review
+In our paper, we review the body of work on nanorobotics over the last five years and demonstrate both the high research interest in the topic and the Crazyflie's prominent status as de-facto standard robot platform.
+The data to reproduce our analysis is available in `docs/literature_review` as a resource to other researchers that approach the nano-drone field.
+We search the Elsevier Scopus citation database using the query in [scopus_query.txt](docs/literature_review/scopus_query.txt), resulting in the 554 papers reported in [scopus_dataset.csv](docs/literature_review/scopus_dataset.csv), with our manual annotations with information about the target drone platform.
+
+## Publications
+If you use NanoCockpit in an academic context, we kindly ask you to cite the following publication:
+* E. Cereda, D. Palossi, and A. Giusti, ‘NanoCockpit: Performance-optimized Application Framework for AI-based Autonomous Nanorobotics’, arXiv pre-print ####.#####, 2025 [arXiv](https://arxiv.org/abs/####.#####).
+  
+```bibtex
+@inproceedings{cereda2025nanocockpit,
+  author={Cereda, Elia and Giusti, Alessandro and Palossi, Daniele},
+  booktitle={}, 
+  title={NanoCockpit: Performance-optimized Application Framework for AI-based Autonomous Nanorobotics}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={},
+  note={[Under review]}
+}
 ```
 
 ## Contributors
