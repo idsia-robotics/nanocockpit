@@ -48,9 +48,6 @@
 
 // Disable network debug prints
 #define NETWORK_VERBOSE (0)
-// #define TRUNK_NETWORK_VERBOSE (1)
-// #define BRANCH_0_NETWORK_VERBOSE (1)
-// #define HEAD_NETWORK_VERBOSE (1)
 
 // Run network inference on a pre-loaded image and verify checksum
 // #define NETWORK_TEST_INPUT
@@ -61,13 +58,10 @@
 // Disable streamer: streamer_send_frame_async becomes a no-op and completes immediately
 // #define STREAMER_DISABLE
 
-// Stream camera frames at best of network capacity, without limiting inference throughput
-// #define STREAMER_BEST_EFFORT
-
 /**************************** SOC SETTINGS ****************************/
 #define SOC_VOLTAGE                 (1200)
-#define SOC_FREQ_FC                 (258000000)
-#define SOC_FREQ_CL                 (185000000)
+#define SOC_FREQ_FC                 (250000000)
+#define SOC_FREQ_CL                 (175000000)
 
 // Target board, used to load the correct pad configurations
 //  - 0: AI-deck [default]
@@ -135,7 +129,7 @@
 // Himax clock frequency (configurable only on AI-deck in MCLK mode)
 #define HIMAX_FQCY (6000000)
 
-// Himax clock divider (configurable only in MCLK mode)
+// Himax clock dividers (configurable only in MCLK mode)
 //  - 0: div /1
 //  - 1: div /2
 //  - 2: div /4
@@ -143,19 +137,25 @@
 #define HIMAX_SYS_DIV (0)
 #define HIMAX_REG_DIV (0)
 
+// Himax image orientation
 #define HIMAX_ORIENTATION (0x03)
 
-// Enable auto-exposure
+// Himax auto-exposure
 //  - 0: disabled
 //  - 1: enabled [default]
 #define HIMAX_AE (0)
 
-// Manual exposure settings
+//// Himax manual exposure settings ////
+// Image integration time [ms]
 #define HIMAX_INTEGRATION_MS (10.0f)
-#define HIMAX_AGAIN          (0x10)
-#define HIMAX_DGAIN          (0x0100)     // TODO: seems to have no effect
 
-// Desired frame rate
+// Analog gain (1x to 16x), refer to datasheet for details
+#define HIMAX_AGAIN          (0x10)
+
+// Digital gain, TODO: seems to have no effect
+#define HIMAX_DGAIN          (0x0100)     
+
+// Himax desired frame rate [Hz]
 #define HIMAX_FRAME_RATE    (30.0f)
 
 // Print HIMAX configuration after acquiring the first frame (requires VERBOSE)
