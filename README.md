@@ -1,4 +1,4 @@
-# Crazyflie NanoCockpit
+# NanoCockpit
 Performance-optimized Application Framework for AI-based Autonomous Nanorobotics
 
 ## Features
