@@ -56,13 +56,13 @@ $ gap8 3.8.1
 
 #### NINA ESP32
 
-ESP-IDF v4.4.5 is required to build this application. Configure your computer to use the ESP-IDF Docker container as described [here](src/docker/espidf).
+ESP-IDF v5.3.1 is required to build this application. Configure your computer to use the ESP-IDF Docker container as described [here](src/docker/espidf).
 Then activate the ESP-IDF container:
 
 ```shell
 $ source venv/bin/activate
 $ cd src/nina
-$ esp 4.4.5
+$ esp 5.3.1
 ``` 
 
 ```shell
