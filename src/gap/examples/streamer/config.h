@@ -43,24 +43,12 @@
 // Enable streamer debug prints
 // #define STREAMER_VERBOSE
 
-// Switch between onboard and offboard inference
-// #define NETWORK_ONBOARD_INFERENCE
-
-// Disable network debug prints
-#define NETWORK_VERBOSE (0)
-
-// Run network inference on a pre-loaded image and verify checksum
-// #define NETWORK_TEST_INPUT
-
-// Profile network inference
-// #define NETWORK_PROFILE
-
 // Disable streamer: streamer_send_frame_async becomes a no-op and completes immediately
 // #define STREAMER_DISABLE
 
 /**************************** SOC SETTINGS ****************************/
 #define SOC_VOLTAGE                 (1200)
-#define SOC_FREQ_FC                 (250000000)
+#define SOC_FREQ_FC                 (246000000)
 #define SOC_FREQ_CL                 (175000000)
 
 // Target board, used to load the correct pad configurations
