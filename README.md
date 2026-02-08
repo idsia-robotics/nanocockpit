@@ -50,6 +50,7 @@ $ gap8 3.8.1
 ```
 
 ```
+> cd examples/pulp-frontnet
 > make clean
 > make all flash
 ```
