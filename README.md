@@ -49,6 +49,14 @@ $ cd src/gap
 $ gap8 3.8.1
 ```
 
+Before flashing ensure that the correct JTAG programmer is configured. For example to use the Olimex ARM-USB-TINY-H sold by Bitcraze run the following:
+
+```
+export GAPY_OPENOCD_CABLE=interface/ftdi/olimex-arm-usb-tiny-h.cfg
+```
+
+Then build and flash
+
 ```
 > make clean
 > make all flash
