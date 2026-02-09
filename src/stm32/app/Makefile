@@ -22,7 +22,7 @@
 APP=1
 
 # DEBUG=1
-CFLAGS += -DDECK_FORCE=bcAI:idsiaTOF -Werror=maybe-uninitialized -Wno-error=unused-variable
+CFLAGS += -DDECK_FORCE=bcAI -Werror=maybe-uninitialized -Wno-error=unused-variable
 
 VPATH += src/
 INCLUDES += -Iinclude/
