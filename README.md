@@ -49,6 +49,7 @@ $ cd src/gap
 $ gap8 3.8.1
 ```
 
+NanoCockpit contains a number of GAP application examples. Select the PULP-Frontnet example, then compile it and flash it to the AI-deck:
 ```
 > cd examples/pulp-frontnet
 > make clean
