@@ -44,7 +44,7 @@
 // #define STREAMER_VERBOSE
 
 // Switch between onboard and offboard inference
-// #define NETWORK_ONBOARD_INFERENCE
+#define NETWORK_ONBOARD_INFERENCE
 
 // Disable network debug prints
 #define NETWORK_VERBOSE (0)
