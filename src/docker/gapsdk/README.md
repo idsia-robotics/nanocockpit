@@ -2,9 +2,9 @@
 
 ## Available versions
 
-Currently, the following versions are supported and GitLab CI automatically builds the corresponding images for Ubuntu 22.04 with both `amd64` and `arm64` architectures:
-* `3.6` and `3.8.1`, built by the `master` branch of this repo
-* `4.22.0`, built by the `ubuntu22.04-4.22.0` branch of this repo
+Currently, the following versions are supported and [GitLab CI](https://gitlab.com/EliaCereda/gapsdk) automatically builds the corresponding images for Ubuntu 22.04 with both `amd64` and `arm64` architectures:
+* `3.6` and `3.8.1`, built by the `master` branch of that repo
+* `4.22.0`, built by the `ubuntu22.04-4.22.0` branch of that repo
 
 Branches that build a number of other 4.x.x versions and images for Ubuntu 18.04 are also provided for reference, but are not actively supported.
 The images are configured to support GAP SDK configs for two boards.
@@ -36,9 +36,16 @@ $ DOCKER_BUILDKIT=1 \
 
 ## Shell alias
 
-Add the following alias to your `.bashrc` or `.zshrc` (depending on your shell). It will allow you to launch a GAP SDK Docker container with the shortcut `gap8`:
+Add the following alias to your `.bashrc` or `.zshrc` (depending on your shell), it will allow you to launch a GAP SDK Docker container with the shortcut `gap8`.
+
+Running code on a physical board requires a JTAG programmer. For the AI-deck, you can use the [Olimex ARM-USB-TINY-H](https://www.olimex.com/Products/ARM/JTAG/ARM-USB-TINY-H/) (recommended by Bitcraze) or [Olimex ARM-USB-OCD-H](https://www.olimex.com/Products/ARM/JTAG/ARM-USB-OCD-H/). For the GAPuino, you can use the onboard FTDI programmer through the board's USB port. Update your configuration below to select the correct programmer.
 
 ```shell
+# Uncomment to select your JTAG programmer
+GAPY_OPENOCD_CABLE_GAP8="interface/ftdi/olimex-arm-usb-tiny-h.cfg" # Olimex ARM-USB-TINY-H (recommended by Bitcraze)
+# GAPY_OPENOCD_CABLE_GAP8="interface/ftdi/olimex-arm-usb-ocd-h.cfg" # Olimex ARM-USB-OCD-H
+# GAPY_OPENOCD_CABLE_GAP8="interface/ftdi/gapuino_ftdi.cfg" # GAPuino onboard FTDI programmer
+
 gap8() {
     # Usage: gap8 [GAP_SDK_VERSION [GAP_CONFIG [UBUNTU_VERSION]]]
     GAP_SDK_VERSION=${1:-3.8.1} GAP_CONFIG=${2:-ai_deck} UBUNTU_VERSION=${3:-22.04}
@@ -47,11 +54,11 @@ gap8() {
         --rm -it \
         -v "${PWD}:/module/data/" \
         -P \
+        -e "GAPY_OPENOCD_CABLE=$GAPY_OPENOCD_CABLE_GAP8" \
         --device-cgroup-rule="c 189:* rmw" -v /dev/bus:/dev/bus:ro -v /dev/serial:/dev/serial:ro \
         registry.gitlab.com/eliacereda/gapsdk:${UBUNTU_VERSION}-${GAP_SDK_VERSION} \
         /bin/bash -c "
             echo \"export PS1='\e[1;32m[gap8:${UBUNTU_VERSION}-${GAP_SDK_VERSION}-${GAP_CONFIG} \w]\$ \e[0m'\" >> /root/.bashrc; \
-            export GAPY_OPENOCD_CABLE=interface/ftdi/olimex-arm-usb-ocd-h.cfg; \
             source /gap_sdk/configs/${GAP_CONFIG}.sh; \
             cd /module/data/; \
             bash
@@ -106,9 +113,7 @@ Cluster master core exit
 Test success !
 ```
 
-### Run on GAP8 via JTAG
-Running the example on the actual board requires a JTAG programmer such as the [Olimex ARM-USB-OCD-H](https://duckduckgo.com/?q=olimex+arm+usb+ocd+h&ia=web#:~:text=JTAG%20%E2%80%BA%20ARM%2DUSB%2DOCD%2DH-,ARM%2DUSB%2DOCD%2DH,-%2D%20Olimex).
-
+### Run on AI-deck via JTAG
 For instructions on how to physically connect the programmer to an AI-deck board, refer to [Bitcraze documentation](https://www.bitcraze.io/documentation/repository/aideck-gap8-examples/master/infrastructure/jtag-programmer/).
 Note that the software setup describe in their documentation is not necessary and already taken care by our Docker container: running the Hello World on an actual board only requires setting the `platform=board` parameter. 
 
