@@ -24,9 +24,10 @@ More detailed information about each component is available in the respective su
 ```shell
 $ python3.9 -m venv venv
 $ source venv/bin/activate
-$ pip install -r requirements.txt
-$ pip install src/client/aideck_cpx_streamer
-$ pip install src/client/crazyflie-clients-python
+$ pip install \
+  -r requirements.txt \
+  -e src/client/aideck_cpx_streamer \
+  -e src/client/crazyflie-clients-python
 ```
 
 #### STM32
