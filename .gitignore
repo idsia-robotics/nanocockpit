@@ -177,3 +177,7 @@ sdkconfig.old
 ## ROS
 /log
 /install
+
+# pixi environments
+.pixi
+*.egg-info

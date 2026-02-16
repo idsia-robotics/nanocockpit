@@ -1,0 +1,17 @@
+[workspace]
+authors = ["Elia Cereda <eliacereda@gmail.com>"]
+channels = ["conda-forge"]
+name = "nanocockpit"
+platforms = ["osx-arm64", "linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = ">=3.9,<3.10"
+qt = ">=5.15.15,<6"
+setuptools = ">=80.9.0,<81"
+
+[pypi-dependencies]
+aideck_cpx_streamer = { path = "src/client/aideck_cpx_streamer", editable = true }
+cfclient = { path = "src/client/crazyflie-clients-python", editable = true }
