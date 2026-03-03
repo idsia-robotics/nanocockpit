@@ -35,7 +35,7 @@ APP_SRCS += ../../lib/uart.c ../../lib/uart_protocol.c
 include app/app.mk
 
 # GVSOC configuration
-override config_args += --config-opt=camera/image-stream=$(CURDIR)/images/fullimage.pgm
-override config_args += --config-opt=uart/baudrate=115200 --config-opt=uart/stdout=true --config-opt=uart/stdin=true
+# override config_args += --config-opt=camera/image-stream=$(CURDIR)/images/fullimage.pgm
+# override config_args += --config-opt=uart/baudrate=115200 --config-opt=uart/stdout=true --config-opt=uart/stdin=true
 
 include $(RULES_DIR)/pmsis_rules.mk
