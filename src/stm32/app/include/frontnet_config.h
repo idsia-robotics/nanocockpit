@@ -80,10 +80,12 @@
   .maxAngularSpeed = 2.0f                                \
 })
 
-// Priority COMMANDER_PRIORITY_AUTONOMOUS = 1 is lower than COMMANDER_PRIORITY_CRTP = 2, so that external
-// setpoints (CRTP) always override autonomous control. Requires modified cfclient so that it does not send
-// commands when the user is not actively controlling the drone.
-#define FRONTNET_SETPOINT_PRIORITY (COMMANDER_PRIORITY_AUTONOMOUS)
+// Default: COMMANDER_PRIORITY_CRTP + 1, so that autonomous commands override the user's remote control.
+// Alternative: COMMANDER_PRIORITY_AUTONOMOUS. Priority COMMANDER_PRIORITY_AUTONOMOUS = 1 is lower than
+// COMMANDER_PRIORITY_CRTP = 2, so that external setpoints (CRTP) always override autonomous control.
+// However, it requires changes to cfclient so that it does not send commands when the user is not 
+// actively controlling the drone.
+#define FRONTNET_SETPOINT_PRIORITY (COMMANDER_PRIORITY_CRTP + 1)
 
 // Rate for state forwarding to GAP8 [Hz]
 #define STATE_FWD_RATE (100)
