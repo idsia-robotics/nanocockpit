@@ -19,6 +19,12 @@ The following instructions allow you build and deploy a demo application build o
 The application implements the PULP-Frontnet-based CNN tested in the _Human pose estimation_ experiment, including on-board inference on the GAP8 SoC and closed-loop control on the STM32 MCU.
 More detailed information about each component is available in the respective subfolders.
 
+### System requirements
+
+NanoCockpit has been tested with the following system configuration
+- Ubuntu 22.04
+- Python 3.9
+
 #### Setup virtual environment
 
 ```shell
