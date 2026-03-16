@@ -35,6 +35,9 @@ $ pip install \
   -e src/client/aideck_cpx_streamer \
   -e src/client/crazyflie-clients-python
 ```
+#### Prepare the Crazyflie
+
+First, flash the 2021.06 firmware from cfclient. This ensures that the NRF51 MCU is flashed to a firmware version compatible with the STM32 firmware below. You only need to do this the first time you flash the demo on a Crazyflie.
 
 #### STM32
 
