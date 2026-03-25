@@ -84,11 +84,10 @@ static void cpx_spi_transfer_task(void *pvParameters) {
     ESP_LOGI(TAG, "cpx_spi_transfer_task started");
 
     while (1) {
-        // FIXME: fix CPX_SPI_BIDIRECTIONAL on GAP9 and re-enable
         // Wait until either NINA or GAP want to transmit
-        // trace_event(TRACE_EVT_CPX_SPI_IDLE, TRACE_BEGIN, 0);
-        // xEventGroupWaitBits(events, SPI_EVENT_GAP_RTT | SPI_EVENT_SEND, true, false, portMAX_DELAY);
-        // trace_event(TRACE_EVT_CPX_SPI_IDLE, TRACE_END, 0);
+        trace_event(TRACE_EVT_CPX_SPI_IDLE, TRACE_BEGIN, 0);
+        xEventGroupWaitBits(events, SPI_EVENT_GAP_RTT | SPI_EVENT_SEND, true, false, portMAX_DELAY);
+        trace_event(TRACE_EVT_CPX_SPI_IDLE, TRACE_END, 0);
 
         uint8_t *rx_buffer;
         xQueueReceive(free_queue, &rx_buffer, portMAX_DELAY); // FIXME: move packet dropping here, so that GAP is never stalled
