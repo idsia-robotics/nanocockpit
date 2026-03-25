@@ -1,0 +1,26 @@
+image: docker:20.10
+
+services:
+ - docker:20.10-dind
+
+stages:
+ - build
+ - deploy
+
+before_script:
+ - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+variables:
+  UBUNTU_VERSION: "22.04"
+  ESP_SDK_VERSION: "5.3.3"
+
+  IMAGE_NAME: $CI_REGISTRY_IMAGE
+  IMAGE_BRANCH_TAG: $CI_REGISTRY_IMAGE:$UBUNTU_VERSION-$ESP_SDK_VERSION
+
+build:
+  stage: build
+  script:
+    - export
+    - docker pull $IMAGE_BRANCH_TAG || true
+    - docker build --pull --cache-from $IMAGE_BRANCH_TAG -t $IMAGE_BRANCH_TAG --build-arg UBUNTU_VERSION --build-arg ESP_SDK_VERSION .
+    - docker push $IMAGE_BRANCH_TAG
