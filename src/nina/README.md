@@ -9,7 +9,7 @@ Configure the ESP-IDF Docker container as described [here](../docker/espidf).
 Open the ESP-IDF container and build the ESP application
 ```shell
 $ cd src/nina
-$ esp 5.3.1
+$ esp 5.3.3
 > idf.py clean; idf.py menuconfig; idf.py all
 ```
 
