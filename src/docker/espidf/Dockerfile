@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION
+ARG UBUNTU_VERSION=22.04
 FROM ubuntu:$UBUNTU_VERSION
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -30,12 +30,12 @@ RUN mkdir /esp && \
 
 ENV PATH="/esp/xtensa-esp32-elf/bin:$PATH"
 
-# Install ESP SDK
-ARG ESP_SDK_VERSION
-RUN echo "ESP SDK version: $ESP_SDK_VERSION"
+# Install ESP IDF
+ARG ESP_IDF_VERSION
+RUN echo "ESP SDK version: $ESP_IDF_VERSION"
 
 RUN cd /esp && \
-    git clone -b v$ESP_SDK_VERSION --recursive https://github.com/espressif/esp-idf.git
+    git clone -b v$ESP_IDF_VERSION --recursive https://github.com/espressif/esp-idf.git
 
 ENV IDF_PATH='/esp/esp-idf'
 
