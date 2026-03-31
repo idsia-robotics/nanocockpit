@@ -97,7 +97,7 @@ Build the example and program it to the Flash memory
 > openocd -f interface/ftdi/olimex-arm-usb-ocd-h.cfg -f board/esp-wroom-32.cfg -c "adapter_khz 20000"  -c 'program_esp build/partition_table/partition-table.bin 0x8000 verify' -c 'program_esp build/bootloader/bootloader.bin 0x1000 verify' -c 'program_esp build/hello_world.bin 0x10000 verify reset exit'
 ```
 
-By default, the output of the program will be written to the ESP32 UART (pins 1-2 of the AI-deck's right expansion header). Connect a UART adapter or a logic analyzer to those pins and check that the expected output is printed:
+By default, the output of the program will be written to the ESP32 UART (UART2 RX, pin 2 of the AI-deck's right expansion header). Connect a UART adapter (e.g., [Adafruit FTDI Friend](https://www.adafruit.com/product/284)) to that pin, set baudrate 115200, and check that the expected output is printed:
 ```shell
 [...]
 (0) cpu_start: Starting scheduler on APP CPU.
