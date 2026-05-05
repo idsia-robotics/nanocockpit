@@ -96,18 +96,18 @@ We search the Elsevier Scopus citation database using the query in [scopus_query
 
 ## Publications
 If you use NanoCockpit in an academic context, we kindly ask you to cite the following publication:
-* E. Cereda, A. Giusti, and D. Palossi, ‘NanoCockpit: Performance-optimized Application Framework for AI-based Autonomous Nanorobotics’, arXiv pre-print 2601.07476, 2026 [arXiv](https://arxiv.org/abs/2601.07476).
+* E. Cereda, A. Giusti, and D. Palossi, ‘NanoCockpit: Performance-optimized Application Framework for AI-based Autonomous Nanorobotics’, in IEEE Robotics and Automation Practice, 2026 [IEEE Xplore](https://ieeexplore.ieee.org/document/11494460), [arXiv](https://arxiv.org/abs/2601.07476).
   
 ```bibtex
-@inproceedings{cereda2025nanocockpit,
+@article{cereda2025nanocockpit,
   author={Cereda, Elia and Giusti, Alessandro and Palossi, Daniele},
-  booktitle={}, 
-  title={NanoCockpit: Performance-optimized Application Framework for AI-based Autonomous Nanorobotics}, 
+  title={NanoCockpit: Performance-optimized Application Framework for AI-based Autonomous Nanorobotics},
+  journal={IEEE Robotics and Automation Practice},
   year={2026},
   volume={},
   number={},
-  pages={},
-  note={[Under review]}
+  pages={1-6},
+  doi={10.1109/RAP.2026.3687493}
 }
 ```
 
